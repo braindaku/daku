@@ -123,6 +123,13 @@ def _korean_weekday(dt):
     return ["월","화","수","목","금","토","일"][dt.weekday()]
 
 def main():
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+            sys.stderr.reconfigure(encoding="utf-8")
+        except AttributeError:
+            pass
+
     if not os.path.exists(ACCOUNT):
         print("❌ youtube_account.json이 없어요. 직원 에이전트 보기 → YouTube → 도구 ⚙️에서 API 키와 채널 ID를 입력하세요.")
         sys.exit(1)

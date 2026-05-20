@@ -16,6 +16,13 @@ def load_config():
         sys.exit(1)
 
 def main():
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+            sys.stderr.reconfigure(encoding="utf-8")
+        except AttributeError:
+            pass
+
     cfg = load_config()
     interval_h = float(cfg.get("INTERVAL_HOURS", 6))  # v2.89.71: 디폴트 6시간 (하루 4번)
     total_h = float(cfg.get("TOTAL_RUN_HOURS", 0))    # v2.89.71: 0 = 무한 (24시간 자율 모드)

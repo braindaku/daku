@@ -2,36 +2,30 @@
   "_migrated": true,
   "_migrated_v2": true,
   "secretary": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
-  },
-  "youtube": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
+    "activatedAt": "2026-05-20T08:16:52.388Z"
   },
   "writer": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
+    "activatedAt": "2026-05-16T07:49:34.066Z",
     "seeded": true
   },
   "designer": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
+    "activatedAt": "2026-05-20T08:12:02.938Z"
   },
   "instagram": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
+    "activatedAt": "2026-05-20T08:13:57.881Z"
   },
   "business": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
+    "activatedAt": "2026-05-20T08:15:04.535Z"
   },
   "developer": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
-    "seeded": true
+    "activatedAt": "2026-05-20T08:11:57.065Z"
   },
   "researcher": {
-    "activatedAt": "2026-05-15T19:03:50.393Z",
+    "activatedAt": "2026-05-16T07:49:34.066Z",
     "seeded": true
   },
-  "_migrated_v3": true
+  "_migrated_v3": true,
+  "youtube": {
+    "activatedAt": "2026-05-20T08:16:08.183Z"
+  }
 }

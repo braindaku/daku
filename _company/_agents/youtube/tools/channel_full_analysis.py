@@ -78,6 +78,13 @@ def _push_telegram(account, text):
         print(f"⚠️  텔레그램 전송 실패: {e}")
 
 def main():
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+            sys.stderr.reconfigure(encoding="utf-8")
+        except AttributeError:
+            pass
+
     if not os.path.exists(ACCOUNT):
         print("❌ youtube_account.json이 없어요. 외부 연결 패널에서 YouTube API 키와 채널 ID 입력해주세요.")
         sys.exit(1)

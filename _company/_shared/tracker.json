@@ -1,0 +1,140 @@
+{
+  "tasks": [
+    {
+      "id": "20260518124755-70gb",
+      "title": "모든 텍스트는 폰트 크기(Size)와 색상(Color)으로 위계가 구분되는가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-18T12:47:55.897Z",
+      "status": "done",
+      "sessionDir": "2026-05-18T12-46",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-18T12-46/_report.md\n- 레오: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n- Designer: 영상 콘텐츠 디자인 브리프 작성\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_",
+      "completedAt": "2026-05-18T12:48:24.721Z"
+    },
+    {
+      "id": "20260518124755-5pgr",
+      "title": "영상의 흐름에 따라 배경/컬러가 자연스럽게 변화하는가? (단조로움 방지)",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-18T12:47:55.911Z",
+      "status": "done",
+      "sessionDir": "2026-05-18T12-46",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-18T12-46/_report.md\n- 레오: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n- Designer: 영상 콘텐츠 디자인 브리프 작성\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_",
+      "completedAt": "2026-05-18T12:48:24.731Z"
+    },
+    {
+      "id": "20260518124755-uvii",
+      "title": "매 슬라이드마다 Daku의 핵심 키워드 중 하나가 시각적으로 강조되는가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-18T12:47:55.926Z",
+      "status": "done",
+      "sessionDir": "2026-05-18T12-46",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-18T12-46/_report.md\n- 레오: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n- Designer: 영상 콘텐츠 디자인 브리프 작성\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_",
+      "completedAt": "2026-05-18T12:48:24.743Z"
+    },
+    {
+      "id": "20260518124755-rr75",
+      "title": "영상의 시작(후크)과 끝(CTA)에 대한 시각적 임팩트가 강력한가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-18T12:47:55.940Z",
+      "status": "done",
+      "sessionDir": "2026-05-18T12-46",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-18T12-46/_report.md\n- 레오: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n- Designer: 영상 콘텐츠 디자인 브리프 작성\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 영상 콘텐츠 제작 및 유튜브 업로드 스크립트 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_",
+      "completedAt": "2026-05-18T12:48:24.757Z"
+    },
+    {
+      "id": "20260519035459-ftxd",
+      "title": "썸네일의 가치를 3초 안에 전달하는가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-19T03:54:59.465Z",
+      "status": "done",
+      "sessionDir": "2026-05-19T03-50",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-19T03-50/_report.md\n- 레오: 채널 분석 보고서 작성\n- Designer: 영상 썸네일 최적화\n- Writer: 영상 스크립트 개선\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 채널 분석 보고서 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_\n> 💡 **핵심 산출**",
+      "completedAt": "2026-05-19T03:55:58.000Z"
+    },
+    {
+      "id": "20260519035459-ejbu",
+      "title": "메인 메시지와 배경색의 명도 대비가 충분한가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-19T03:54:59.479Z",
+      "status": "done",
+      "sessionDir": "2026-05-19T03-50",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-19T03-50/_report.md\n- 레오: 채널 분석 보고서 작성\n- Designer: 영상 썸네일 최적화\n- Writer: 영상 스크립트 개선\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 채널 분석 보고서 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_\n> 💡 **핵심 산출**",
+      "completedAt": "2026-05-19T03:55:58.010Z"
+    },
+    {
+      "id": "20260519035459-1cza",
+      "title": "텍스트가 너무 많은 정보로 과부하를 일으키지 않는가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-19T03:54:59.488Z",
+      "status": "done",
+      "sessionDir": "2026-05-19T03-50",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-19T03-50/_report.md\n- 레오: 채널 분석 보고서 작성\n- Designer: 영상 썸네일 최적화\n- Writer: 영상 스크립트 개선\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 채널 분석 보고서 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_\n> 💡 **핵심 산출**",
+      "completedAt": "2026-05-19T03:55:58.027Z"
+    },
+    {
+      "id": "20260519035459-frwj",
+      "title": "CTA(클릭 유도 장치)가 명확하게 지정되어 있는가?",
+      "description": "자동 등록 (Designer 산출물에서 추출)",
+      "owner": "agent",
+      "agentIds": [
+        "designer"
+      ],
+      "createdAt": "2026-05-19T03:54:59.502Z",
+      "status": "done",
+      "sessionDir": "2026-05-19T03-50",
+      "nudges": 0,
+      "priority": "normal",
+      "preAlarmsSent": [],
+      "evidence": "완료: sessions/2026-05-19T03-50/_report.md\n- 레오: 채널 분석 보고서 작성\n- Designer: 영상 썸네일 최적화\n- Writer: 영상 스크립트 개선\n\nCEO 종합 요점: ## 🗂 작업 라운드 — 누가 뭐 했나\n\n### 📺 레오 _(Head of YouTube)_\n> 📋 **지시**: 채널 분석 보고서 작성\n> 🔧 **도구 실행**: `my_videos_check.py (prefetch)`\n> 📊 **수집 데이터**: YouTube 채널 영상 분석 (실제 API 데이터) _(exit 1)_\n> 💡 **핵심 산출**",
+      "completedAt": "2026-05-19T03:55:58.041Z"
+    }
+  ]
+}

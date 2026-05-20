@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect AI Agent Manager</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --input-bg: #0f172a;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .description {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .agent-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .agent-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .agent-card:hover::before {
+            opacity: 1;
+        }
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .agent-id {
+            background: #334155;
+            color: #94a3b8;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        input, textarea, select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #1e293b;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 12px;
+        }
+        /* Toggle Switch */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .switch-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0;
+            text-transform: none;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #334155;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--accent);
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        .tag-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tag-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .tag-inactive { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+
+        .btn-save {
+            background: var(--accent);
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-save:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+        .btn-save:active {
+            transform: scale(0.98);
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* 🧠 에이전트 지식 학습 영역 스타일 */
+        .knowledge-section {
+            margin-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+        }
+        .knowledge-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .file-dropzone {
+            border: 2px dashed rgba(167, 139, 250, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background: rgba(167, 139, 250, 0.02);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+        .file-dropzone:hover {
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.06);
+            box-shadow: 0 0 12px rgba(167, 139, 250, 0.15);
+        }
+        .file-dropzone.dragover {
+            border-color: #22d3ee;
+            background: rgba(34, 211, 238, 0.06);
+        }
+        .dropzone-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .file-list {
+            margin-bottom: 12px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+        }
+        .file-name {
+            color: var(--text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            margin-right: 8px;
+            text-align: left;
+        }
+        .file-remove {
+            color: #f43f5e;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 0 4px;
+        }
+        .btn-train {
+            background: linear-gradient(135deg, #a78bfa, #818cf8);
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(167, 139, 250, 0.3);
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        .btn-train:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.45);
+        }
+        .btn-train:active {
+            transform: scale(0.98);
+        }
+        .btn-train:disabled {
+            background: #334155;
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+            filter: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Connect AI: 에이전트 커스터마이징</h1>
+        <p class="description">우리 회사의 에이전트 이름, 역할, 활성화 상태를 내 마음대로 변경하세요.</p>
+    </header>
+
+    <div id="agent-list" class="agent-grid">
+        <!-- Loading state -->
+        <div style="color: var(--text-muted)">에이전트 정보를 불러오는 중...</div>
+    </div>
+
+    <div id="toast" class="toast">✅ 변경사항이 저장되었습니다!</div>
+
+    <script>
+        const vscode = acquireVsCodeApi();
+        
+        // Listen for messages from extension
+        window.addEventListener('message', event => {
+            const message = event.data;
+            switch (message.command) {
+                case 'loadAgents':
+                    renderAgents(message.agents);
+                    break;
+                case 'saveSuccess':
+                    showToast();
+                    break;
+            }
+        });
+
+        // Request initial data
+        vscode.postMessage({ command: 'getAgents' });
+
+        function renderAgents(agents) {
+            const container = document.getElementById('agent-list');
+            container.innerHTML = Object.entries(agents).map(([id, agent]) => `
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <span style="font-size: 24px">${agent.emoji || '🤖'}</span>
+                        <div style="flex: 1">
+                            <div style="display: flex; align-items: center; gap: 8px">
+                                <div style="font-weight: 700">${agent.name}</div>
+                                <span class="tag-badge ${agent.isActive ? 'tag-active' : 'tag-inactive'}">
+                                    ${agent.isActive ? 'ACTIVE' : 'INACTIVE'}
+                                </span>
+                            </div>
+                            <div class="agent-id">${id}</div>
+                        </div>
+                    </div>
+                    
+                    ${agent.isTogglable ? `
+                    <div class="switch-container">
+                        <span class="switch-label">에이전트 활성화</span>
+                        <label class="switch">
+                            <input type="checkbox" id="active-${id}" ${agent.isActive ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    ` : ''}
+
+                    <div class="row">
+                        <div class="input-group">
+                            <label>이름</label>
+                            <input type="text" id="name-${id}" value="${agent.name}">
+                        </div>
+                        <div class="input-group">
+                            <label>이모지</label>
+                            <input type="text" id="emoji-${id}" value="${agent.emoji || ''}" placeholder="이모지">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>역할 (Role)</label>
+                        <input type="text" id="role-${id}" value="${agent.role}">
+                    </div>
+
+                    <div class="input-group">
+                        <label>한줄 설명 (Tagline)</label>
+                        <input type="text" id="tagline-${id}" value="${agent.tagline || ''}">
+                    </div>
+
+                    <div class="input-group">
+                        <label>프로필 이미지 (assets/agents/)</label>
+                        <input type="text" id="image-${id}" value="${agent.profileImage || ''}" placeholder="leo_profile.png 등">
+                    </div>
+
+                    <div class="input-group">
+                        <label>특기 (Specialty)</label>
+                        <textarea id="specialty-${id}" rows="2">${agent.specialty || ''}</textarea>
+                    </div>
+
+                    <!-- 🧠 지식 학습 섹션 -->
+                    <div class="knowledge-section">
+                        <div class="knowledge-title">
+                            <span>🧠 지식 수동 학습 (Train)</span>
+                        </div>
+                        <div class="file-dropzone" id="dropzone-${id}" onclick="triggerFileInput('${id}')" ondragover="handleDragOver(event, '${id}')" ondragleave="handleDragLeave(event, '${id}')" ondrop="handleDrop(event, '${id}')">
+                            <div class="dropzone-text" id="dropzone-text-${id}">📄 파일을 드래그하거나 클릭하여 추가</div>
+                            <input type="file" id="file-input-${id}" multiple style="display: none;" onchange="handleFileSelect(event, '${id}')">
+                        </div>
+                        <div class="file-list" id="file-list-${id}"></div>
+                        <button class="btn-train" id="btn-train-${id}" onclick="trainAgent('${id}')" disabled>
+                            <span>지식 학습하기 (Reinforce)</span>
+                        </button>
+                    </div>
+
+                    <button class="btn-save" onclick="saveAgent('${id}')">
+                        <span>적용하기</span>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function saveAgent(id) {
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>저장 중...</span>';
+            btn.style.opacity = '0.7';
+
+            const activeEl = document.getElementById('active-' + id);
+            const data = {
+                id,
+                name: document.getElementById('name-' + id).value,
+                role: document.getElementById('role-' + id).value,
+                emoji: document.getElementById('emoji-' + id).value,
+                tagline: document.getElementById('tagline-' + id).value,
+                profileImage: document.getElementById('image-' + id).value,
+                specialty: document.getElementById('specialty-' + id).value,
+                isActive: activeEl ? activeEl.checked : undefined
+            };
+            vscode.postMessage({ command: 'updateAgent', data });
+            
+            // Re-enable after a short delay (or wait for message)
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+                btn.style.opacity = '1';
+            }, 1000);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'flex';
+            toast.style.alignItems = 'center';
+            toast.style.gap = '8px';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        /* 🧠 에이전트 지식 학습 관련 JS 함수 */
+        window.pendingFiles = window.pendingFiles || {};
+
+        function triggerFileInput(id) {
+            document.getElementById('file-input-' + id).click();
+        }
+
+        function handleDragOver(e, id) {
+            e.preventDefault();
+            document.getElementById('dropzone-' + id).classList.add('dragover');
+        }
+
+        function handleDragLeave(e, id) {
+            e.preventDefault();
+            document.getElementById('dropzone-' + id).classList.remove('dragover');
+        }
+
+        function handleDrop(e, id) {
+            e.preventDefault();
+            document.getElementById('dropzone-' + id).classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            processFiles(files, id);
+        }
+
+        function handleFileSelect(e, id) {
+            const files = e.target.files;
+            processFiles(files, id);
+        }
+
+        function processFiles(files, id) {
+            if (!files || files.length === 0) return;
+            
+            if (!window.pendingFiles[id]) {
+                window.pendingFiles[id] = [];
+            }
+
+            Array.from(files).forEach(file => {
+                // 중복 파일 체크
+                if (window.pendingFiles[id].some(f => f.name === file.name)) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Data = e.target.result.split(',')[1];
+                    window.pendingFiles[id].push({
+                        name: file.name,
+                        size: file.size,
+                        data: base64Data
+                    });
+                    renderFileList(id);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeFile(id, index) {
+            if (window.pendingFiles[id]) {
+                window.pendingFiles[id].splice(index, 1);
+                renderFileList(id);
+            }
+        }
+
+        function renderFileList(id) {
+            const listEl = document.getElementById('file-list-' + id);
+            const btnEl = document.getElementById('btn-train-' + id);
+            const files = window.pendingFiles[id] || [];
+
+            if (files.length === 0) {
+                listEl.innerHTML = '';
+                btnEl.disabled = true;
+                return;
+            }
+
+            btnEl.disabled = false;
+            listEl.innerHTML = files.map((file, idx) => `
+                <div class="file-item">
+                    <span class="file-name" title="${file.name}">${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <span class="file-remove" onclick="removeFile('${id}', ${idx})">×</span>
+                </div>
+            `).join('');
+        }
+
+        function trainAgent(id) {
+            const files = window.pendingFiles[id] || [];
+            if (files.length === 0) return;
+
+            const btn = document.getElementById('btn-train-' + id);
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span>🧠 지식 분석 및 학습 중...</span>';
+            btn.style.opacity = '0.7';
+
+            vscode.postMessage({
+                command: 'trainAgentKnowledge',
+                data: {
+                    agentId: id,
+                    files: files
+                }
+            });
+
+            // 익스텐션의 응답을 수신하기 위해 전역 리스너 보강
+            const originalListener = window.onMessageEvent;
+            
+            // 기존 리스너 구조를 깨뜨리지 않기 위해, window message 이벤트 핸들러에서 직접 trainSuccess를 체크하도록 상단 메인 리스너를 업그레이드합니다.
+        }
+
+        // 메인 리스너 내에 trainSuccess 처리기 탑재를 위해 상단 loadAgents, saveSuccess 외에 trainSuccess 케이스가 정상 작동하는지 확인합니다.
+        window.addEventListener('message', event => {
+            const message = event.data;
+            if (message.command === 'trainSuccess') {
+                const id = message.agentId;
+                window.pendingFiles[id] = [];
+                renderFileList(id);
+                
+                const btn = document.getElementById('btn-train-' + id);
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span>지식 학습하기 (Reinforce)</span>';
+                    btn.style.opacity = '1';
+                }
+
+                // 성공 메시지 띄우기
+                const toast = document.getElementById('toast');
+                toast.innerHTML = `✅ ${id} 에이전트 지식 학습이 완료되었습니다!`;
+                showToast();
+            }
+        });
+    </script>
+</body>
+</html>
