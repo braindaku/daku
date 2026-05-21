@@ -10,9 +10,6 @@
   "designer": {
     "activatedAt": "2026-05-20T08:17:02.483Z"
   },
-  "instagram": {
-    "activatedAt": "2026-05-20T08:13:57.881Z"
-  },
   "business": {
     "activatedAt": "2026-05-20T08:15:04.535Z"
   },
@@ -22,8 +19,5 @@
   "researcher": {
     "activatedAt": "2026-05-20T08:19:18.353Z"
   },
-  "_migrated_v3": true,
-  "youtube": {
-    "activatedAt": "2026-05-20T08:16:08.183Z"
-  }
+  "_migrated_v3": true
 }
