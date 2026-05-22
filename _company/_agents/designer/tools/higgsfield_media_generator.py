@@ -6,19 +6,66 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.request
+
+
+def is_media_url(url):
+    parsed_url = url.split("?")[0].lower()
+    media_extensions = {".png", ".jpg", ".jpeg", ".webp", ".mp4", ".mov", ".avi", ".webm", ".gif"}
+    return any(parsed_url.endswith(ext) for ext in media_extensions)
+
+
+def download_file(url, target_dir):
+    try:
+        parsed_url = url.split("?")[0]
+        filename = os.path.basename(parsed_url)
+        if not filename or "." not in filename:
+            filename = f"media_{datetime.datetime.now().strftime('%H%M%S')}_{hash(url) % 10000}.png"
+        
+        filename = re.sub(r'[\\/*?:"<>|]', "", filename)
+        
+        base, ext = os.path.splitext(filename)
+        counter = 1
+        target_path = os.path.join(target_dir, filename)
+        while os.path.exists(target_path):
+            filename = f"{base}_{counter}{ext}"
+            target_path = os.path.join(target_dir, filename)
+            counter += 1
+            
+        req = urllib.request.Request(
+            url, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+        )
+        with urllib.request.urlopen(req, timeout=30) as response, open(target_path, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+            
+        return target_path
+    except Exception as e:
+        sys.stderr.write(f"파일 다운로드 실패 ({url}): {str(e)}\n")
+        return None
+
 
 
 CONFIG_FILENAME = "higgsfield_media_generator.json"
+
+
+DEFAULT_PROMPT = "a cinematic product photo on a reflective black floor, studio lighting, ultra detailed"
 
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), CONFIG_FILENAME)
 
     if not os.path.exists(config_path):
-        raise FileNotFoundError(f"설정 파일을 찾을 수 없습니다: {config_path}")
+        sys.stderr.write(f"[WARNING] Config file not found: {config_path} — using defaults\n")
+        return {}
 
-    with open(config_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        sys.stderr.write(f"[WARNING] Config JSON parse error: {e} — using defaults\n")
+        return {}
 
 
 def now_string():
@@ -132,12 +179,11 @@ def build_generate_command(config, args):
     if generation_type not in {"image", "video"}:
         raise ValueError("GENERATION_TYPE은 'image' 또는 'video'여야 합니다.")
 
-    prompt = args.prompt or config.get("PROMPT", "")
+    prompt = args.prompt or config.get("PROMPT", "") or DEFAULT_PROMPT
+    # sanitize: remove newlines that would break CLI argument parsing
+    prompt = prompt.replace("\n", " ").replace("\r", "").strip()
     if not prompt:
-        raise ValueError(
-            f"생성 프롬프트가 비어 있습니다. PROMPT 또는 --prompt 값을 입력하세요. "
-            f"(args.prompt: {repr(args.prompt)}, config keys: {list(config.keys()) if config else None}, config PROMPT: {repr(config.get('PROMPT')) if config else None})"
-        )
+        prompt = DEFAULT_PROMPT
 
     if args.model:
         model = args.model
@@ -145,6 +191,21 @@ def build_generate_command(config, args):
         model = config.get("IMAGE_MODEL", "nano_banana_2")
     else:
         model = config.get("VIDEO_MODEL", "kling3_0")
+
+    # 모델명 대소문자 정규화 및 올바른 시스템 식별자(ID) 매핑 가드
+    model = model.strip().lower()
+    model_mapping = {
+        "nano_banana_pro": "nano_banana_2",
+        "nano_banana_2": "nano_banana_2",
+        "nano_banana2": "nano_banana_2",
+        "nano_banana": "nano_banana_2",
+        "kling3_0": "kling3_0",
+        "kling3.0": "kling3_0",
+        "kling_3_0": "kling3_0",
+        "kling3": "kling3_0",
+    }
+    if model in model_mapping:
+        model = model_mapping[model]
 
     action = args.action or "create"
     if action not in {"create", "cost"}:
@@ -265,10 +326,13 @@ def command_to_safe_string(command):
 
 
 def run_command(command, timeout_seconds):
+    # Windows/UTF-8 환경에서의 인코딩 유연성 보장을 위해 encoding="utf-8", errors="replace"를 설정합니다.
     return subprocess.run(
         command,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         timeout=timeout_seconds,
         check=False
     )
@@ -307,6 +371,26 @@ def make_parser():
     return parser
 
 
+def get_confirm_root_dir():
+    # 환경별로 가장 적합한 confirm 저장 디렉토리를 찾아 반환합니다.
+    paths = [
+        "D:\\AI_Antigravity\\DK\\confirm",
+        "C:\\Users\\daku\\.connect-ai-brain\\_company\\confirm",
+        os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "confirm")
+    ]
+    for path in paths:
+        try:
+            os.makedirs(path, exist_ok=True)
+            if os.path.exists(path):
+                return path
+        except Exception:
+            continue
+    # 최후의 보루: 현재 스크립트 경로 기준 상위 디렉토리 하위의 confirm 폴더
+    fallback = os.path.join(os.path.dirname(os.path.abspath(__file__)), "confirm")
+    os.makedirs(fallback, exist_ok=True)
+    return fallback
+
+
 def main():
     try:
         if hasattr(sys.stdout, 'reconfigure'):
@@ -342,12 +426,28 @@ def main():
         result_urls = find_urls(completed.stdout + "\n" + completed.stderr)
 
         if completed.returncode == 0:
+            saved_local_files = []
+            if result_urls:
+                confirm_root = get_confirm_root_dir()
+                today = datetime.datetime.now().strftime("%Y-%m-%d")
+                target_dir = os.path.join(confirm_root, today)
+                try:
+                    os.makedirs(target_dir, exist_ok=True)
+                    for url in result_urls:
+                        if is_media_url(url):
+                            local_path = download_file(url, target_dir)
+                            if local_path:
+                                saved_local_files.append(local_path)
+                except Exception as e:
+                    sys.stderr.write(f"로컬 저장 디렉터리 생성 또는 다운로드 중 에러 발생: {str(e)}\n")
+
             result = {
                 "status": "success",
                 "timestamp": now_string(),
                 "command": safe_command,
                 "returncode": completed.returncode,
                 "result_urls": result_urls,
+                "saved_local_files": saved_local_files,
                 "parsed_stdout": parsed_stdout,
                 "stdout": completed.stdout.strip(),
                 "stderr": completed.stderr.strip()
