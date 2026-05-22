@@ -134,7 +134,10 @@ def build_generate_command(config, args):
 
     prompt = args.prompt or config.get("PROMPT", "")
     if not prompt:
-        raise ValueError("생성 프롬프트가 비어 있습니다. PROMPT 또는 --prompt 값을 입력하세요.")
+        raise ValueError(
+            f"생성 프롬프트가 비어 있습니다. PROMPT 또는 --prompt 값을 입력하세요. "
+            f"(args.prompt: {repr(args.prompt)}, config keys: {list(config.keys()) if config else None}, config PROMPT: {repr(config.get('PROMPT')) if config else None})"
+        )
 
     if args.model:
         model = args.model
@@ -306,6 +309,11 @@ def make_parser():
 
 def main():
     try:
+        if hasattr(sys.stdout, 'reconfigure'):
+            sys.stdout.reconfigure(encoding='utf-8')
+        if hasattr(sys.stderr, 'reconfigure'):
+            sys.stderr.reconfigure(encoding='utf-8')
+
         config = load_config()
         parser = make_parser()
         args = parser.parse_args()
@@ -375,7 +383,12 @@ def main():
             "status": "error",
             "timestamp": now_string(),
             "message": str(e),
-            "hint": "Higgsfield CLI 설치 여부와 로그인 상태를 확인하세요. 설치: npm install -g @higgsfield/cli, 로그인: higgsfield auth login"
+            "hint": "Higgsfield CLI 설치 여부와 로그인 상태를 확인하세요. 설치: npm install -g @higgsfield/cli, 로그인: higgsfield auth login",
+            "debug": {
+                "sys.argv": sys.argv,
+                "config_keys": list(config.keys()) if 'config' in locals() else None,
+                "config_prompt": config.get('PROMPT') if 'config' in locals() else None
+            }
         }
         print(json.dumps(error_result, ensure_ascii=False, indent=2))
         sys.exit(1)
